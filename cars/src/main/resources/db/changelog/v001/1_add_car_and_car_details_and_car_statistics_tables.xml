@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<databaseChangeLog logicalFilePath="1_add_car_and_car_details_and_car_statistics_tables.xml"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+
+    <changeSet id="add car, car_details and car_statistics tables" author="areva">
+        <createTable tableName="car">
+            <column name="id" type="INT UNSIGNED" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="owner_id" type="INT UNSIGNED" remarks="Owner identifier as integer value. Must be as not null. Should be populated via external call to Owner's API.">
+                <constraints nullable="false"/>
+            </column>
+            <column name="service_partners_id" type="INT UNSIGNED" remarks="Service partner identifier as integer value. Must be as not null. Should be populated via external call to Service Partner's API.">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at_utc" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_by_id" type="INT UNSIGNED">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at_utc" type="DATETIME">
+                <constraints nullable="true"/>
+            </column>
+            <column name="updated_by_id" type="INT UNSIGNED">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+
+        <sql>create type fuel as enum ('PETROL', 'GAS', 'ELECTRIC', 'DIESEL', 'HYBRID')</sql>
+
+        <sql>create type transmission as enum ('MANUAL', 'AUTOMATE')</sql>
+
+        <createTable tableName="car_details">
+            <column name="id" type="INT UNSIGNED" remarks="Car details identifier as integer value. Should be as ONE-TO-ONE related to car table by car.id column.">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="title" type="VARCHAR(20)" remarks="Car's name.">
+                <constraints nullable="false"/>
+            </column>
+            <column name="manufacturer" type="VARCHAR(50)" remarks="Car manufacturer's name">
+                <constraints nullable="false"/>
+            </column>
+            <column name="release_date" type="DATE" remarks="Car's release (production) date">
+                <constraints nullable="false"/>
+            </column>
+            <column name="purchase_date" type="DATE" remarks="Car's purchase by the customer / owner date">
+                <constraints nullable="false"/>
+            </column>
+            <column name="fuel" type="fuel" remarks="Type of car's fuel.">
+                <constraints nullable="false"/>
+            </column>
+            <column name="transmission" type="transmission" remarks="Type of car's transmission.">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at_utc" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_by_id" type="INT UNSIGNED">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at_utc" type="DATETIME">
+                <constraints nullable="true"/>
+            </column>
+            <column name="updated_by_id" type="INT UNSIGNED">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint constraintName="fk_car_details_car"
+                                 baseColumnNames="id"
+                                 baseTableName="car_details"
+                                 referencedColumnNames="id"
+                                 referencedTableName="car"
+                                 onDelete="CASCADE"
+                                 onUpdate="NO ACTION"/>
+
+        <createTable tableName="car_statistics">
+            <column name="id" type="INT UNSIGNED" remarks="Car statistics identifier as integer value. Should be as ONE-TO-ONE related to car table by car.id column.">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="mileage" type="FLOAT" remarks="Car's mileage. Estimates in kilometers.">
+                <constraints nullable="false"/>
+            </column>
+            <column name="average_speed" type="FLOAT" remarks="Car's average speed. Estimates in kilometers per hour (km/h).">
+                <constraints nullable="false"/>
+            </column>
+            <column name="average_fuel_consumption" type="FLOAT" remarks="Car's average fuel consumption. Estimates in liters per 100 kilometers (L/100km).">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_time_after_engine_start_seconds" type="INT UNSIGNED" remarks="Car's last time after engine start. Estimates in seconds.">
+                <constraints nullable="false"/>
+            </column>
+            <column name="average_ride_time_seconds" type="INT UNSIGNED" remarks="Car's average ride time. Estimates in seconds.">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at_utc" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_by_id" type="INT UNSIGNED">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at_utc" type="DATETIME">
+                <constraints nullable="true"/>
+            </column>
+            <column name="updated_by_id" type="INT UNSIGNED">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint constraintName="fk_fk_car_statistics_car"
+                                 baseColumnNames="id"
+                                 baseTableName="car_statistics"
+                                 referencedColumnNames="id"
+                                 referencedTableName="car"
+                                 onDelete="CASCADE"
+                                 onUpdate="NO ACTION"/>
+    </changeSet>
+</databaseChangeLog>
