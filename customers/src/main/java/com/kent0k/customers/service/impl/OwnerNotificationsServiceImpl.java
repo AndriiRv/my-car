@@ -19,14 +19,15 @@ import java.util.List;
 @AllArgsConstructor
 public class OwnerNotificationsServiceImpl implements OwnerService<OwnerNotificationsDto, OwnerNotificationsDto, OwnerNotificationsUpdateDto> {
 
-    private OwnerRepository ownerRepository;
+    private final OwnerRepository ownerRepository;
     private final OwnerNotificationsRepository ownerNotificationsRepository;
     private final OwnerNotificationsMapper ownerNotificationsMapper;
 
     @Transactional
     @Override
     public boolean save(OwnerNotificationsDto saveDto) {
-        Owner owner = ownerRepository.findById(saveDto.getOwnerId()).orElseThrow(() -> new ResourceNotFoundException(String.format("Owner with id as %s cannot be found.", saveDto.getOwnerId())));
+        Owner owner = ownerRepository.findById(saveDto.getOwnerId())
+                .orElseThrow(() -> new ResourceNotFoundException(String.format("Owner with id as %s cannot be found.", saveDto.getOwnerId())));
 
         OwnerNotifications ownerNotifications = ownerNotificationsMapper.mapToOwnerNotifications(saveDto);
         ownerNotifications.setOwner(owner);
@@ -37,7 +38,8 @@ public class OwnerNotificationsServiceImpl implements OwnerService<OwnerNotifica
 
     @Override
     public OwnerNotificationsDto fetch(Integer id) {
-        OwnerNotifications ownerNotifications = ownerNotificationsRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(String.format("Owner notification with id as %s cannot be found.", id)));
+        OwnerNotifications ownerNotifications = ownerNotificationsRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(String.format("Owner notification with id as %s cannot be found.", id)));
         return ownerNotificationsMapper.mapToOwnerNotificationsDto(ownerNotifications);
     }
 
@@ -49,7 +51,8 @@ public class OwnerNotificationsServiceImpl implements OwnerService<OwnerNotifica
     @Transactional
     @Override
     public boolean update(OwnerNotificationsUpdateDto updateDto) {
-        Owner owner = ownerRepository.findById(updateDto.getOwnerId()).orElseThrow(() -> new ResourceNotFoundException(String.format("Owner with id as %s cannot be found.", updateDto.getOwnerId())));
+        Owner owner = ownerRepository.findById(updateDto.getOwnerId())
+                .orElseThrow(() -> new ResourceNotFoundException(String.format("Owner with id as %s cannot be found.", updateDto.getOwnerId())));
 
         OwnerNotifications ownerNotifications = ownerNotificationsMapper.mapToOwnerNotifications(updateDto);
         ownerNotifications.setOwner(owner);
@@ -61,7 +64,8 @@ public class OwnerNotificationsServiceImpl implements OwnerService<OwnerNotifica
     @Transactional
     @Override
     public boolean delete(Integer id) {
-        OwnerNotifications ownerNotifications = ownerNotificationsRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(String.format("Owner notification with id as %s cannot be found.", id)));
+        OwnerNotifications ownerNotifications = ownerNotificationsRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(String.format("Owner notification with id as %s cannot be found.", id)));
         ownerNotificationsRepository.delete(ownerNotifications);
         return true;
     }

@@ -1,13 +1,13 @@
 package com.kent0k.customers.dto.ownercredentials;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.kent0k.customers.enums.DbBoolean;
-import jakarta.validation.constraints.NotNull;
 
 import java.util.Objects;
 
 public class OwnerCredentialsSaveDto extends OwnerCredentialsDto {
 
-    @NotNull
+    @JsonIgnore
     private final DbBoolean isActive = DbBoolean.Y;
 
     public DbBoolean getIsActive() {
