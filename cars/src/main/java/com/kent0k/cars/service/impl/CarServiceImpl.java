@@ -50,7 +50,7 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public CarDto fetch(Integer id) {
-        Car car = carRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(String.format("Car with %s cannot be found.", id)));
+        Car car = carRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(String.format("Car with id as %s cannot be found.", id)));
         return carMapper.mapToCarDto(car);
     }
 
@@ -59,27 +59,16 @@ public class CarServiceImpl implements CarService {
         return carMapper.mapToCarDtos(carRepository.findAll());
     }
 
-    @Transactional
     @Override
     public boolean update(CarUpdateDto carUpdateDto) {
-        Car car = carRepository.save(carMapper.mapToCar(carUpdateDto));
-
-        CarDetails carDetails = carDetailsMapper.mapToCarDetails(carUpdateDto.getCarDetailsUpdateDto());
-        carDetails.setCar(car);
-
-        CarStatistics carStatistics = carStatisticsMapper.mapToCarStatistics(carUpdateDto.getCarStatisticsUpdateDto());
-        carStatistics.setCar(car);
-
-        carDetailsRepository.save(carDetails);
-        carStatisticsRepository.save(carStatistics);
-
+        carRepository.save(carMapper.mapToCar(carUpdateDto));
         return true;
     }
 
     @Transactional
     @Override
     public boolean delete(Integer id) {
-        Car car = carRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(String.format("Car with %s cannot be found.", id)));
+        Car car = carRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(String.format("Car with id as %s cannot be found.", id)));
         carRepository.delete(car);
         return true;
     }

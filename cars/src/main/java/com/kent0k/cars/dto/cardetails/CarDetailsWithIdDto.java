@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotNull;
 
 import java.util.Objects;
 
-public class CarDetailsUpdateDto extends CarDetailsDto {
+public class CarDetailsWithIdDto extends CarDetailsDto {
 
     @NotNull
     private Integer id;
@@ -20,7 +20,7 @@ public class CarDetailsUpdateDto extends CarDetailsDto {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof CarDetailsUpdateDto that)) return false;
+        if (!(o instanceof CarDetailsWithIdDto that)) return false;
         if (!super.equals(o)) return false;
         return Objects.equals(id, that.id);
     }
@@ -32,7 +32,7 @@ public class CarDetailsUpdateDto extends CarDetailsDto {
 
     @Override
     public String toString() {
-        return "CarDetailsUpdateDto{" +
+        return "CarDetailsWithIdDto{" +
                 "id=" + id +
                 '}';
     }
