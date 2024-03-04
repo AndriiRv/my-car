@@ -60,10 +60,6 @@ public class OwnerServiceImpl implements OwnerService<OwnerDto, OwnerSaveDto, Ow
         Owner owner = ownerMapper.mapToOwner(ownerUpdateDto);
         ownerRepository.save(owner);
 
-        OwnerCredentials ownerCredentials = ownerCredentialsMapper.mapToOwnerCredentials(ownerUpdateDto.getOwnerCredentialsUpdateDto());
-        ownerCredentials.setOwner(owner);
-        ownerCredentialsRepository.save(ownerCredentials);
-
         return true;
     }
 
