@@ -1,6 +1,7 @@
 package com.kent0k.cars.dto.car;
 
 import com.kent0k.cars.entity.Car;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 
 import java.util.Objects;
@@ -10,12 +11,19 @@ import java.util.Objects;
  * <p>
  * NOTE: we should not use Lombok here because we use MapStruct library which require hardcoded getter and setter of fields.
  */
+
+@Schema(
+        name = "CarDto",
+        description = "Schema about holding Car information"
+)
 public class CarDto {
 
     @NotNull
+    @Schema(description = "Owner identifier as integer value", example = "123")
     private Integer ownerId;
 
     @NotNull
+    @Schema(description = "Service partner identifier as integer value", example = "123")
     private Integer servicePartnersId;
 
     public Integer getOwnerId() {

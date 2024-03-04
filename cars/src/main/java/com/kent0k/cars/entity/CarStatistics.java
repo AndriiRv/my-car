@@ -9,6 +9,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 
 import java.util.Objects;
@@ -29,22 +30,27 @@ public class CarStatistics extends BaseEntity {
     private Car car;
 
     @Nullable
+    @Min(0)
     @Column
     private Double mileage;
 
     @Nullable
+    @Min(0)
     @Column
     private Double averageSpeed;
 
     @Nullable
+    @Min(0)
     @Column
     private Double averageFuelConsumption;
 
     @Nullable
+    @Min(0)
     @Column
     private Integer lastTimeAfterEngineStartSeconds;
 
     @Nullable
+    @Min(0)
     @Column
     private Integer averageRideTimeSeconds;
 

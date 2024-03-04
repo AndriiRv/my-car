@@ -2,12 +2,27 @@ package com.kent0k.cars.dto.car;
 
 import com.kent0k.cars.dto.cardetails.CarDetailsDto;
 import com.kent0k.cars.dto.carstatistics.CarStatisticsDto;
+import com.kent0k.cars.entity.Car;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.Objects;
 
+/**
+ * Dto mapper class for {@link Car} class.
+ * <p>
+ * NOTE: we should not use Lombok here because we use MapStruct library which require hardcoded getter and setter of fields.
+ */
+
+@Schema(
+        name = "CarSaveDto",
+        description = "Schema about holding Car, CarDetails and CarStatistics information to save"
+)
 public class CarSaveDto extends CarDto {
 
+    @Schema(description = "Car details data to save")
     private CarDetailsDto carDetailsDto;
+
+    @Schema(description = "Car statistics data to save")
     private CarStatisticsDto carStatisticsDto;
 
     public CarDetailsDto getCarDetailsDto() {

@@ -3,8 +3,11 @@ package com.kent0k.cars.dto.cardetails;
 import com.kent0k.cars.entity.CarDetails;
 import com.kent0k.cars.enums.Fuel;
 import com.kent0k.cars.enums.Transmission;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Past;
+import jakarta.validation.constraints.Size;
 
 import java.time.LocalDate;
 import java.util.Objects;
@@ -14,24 +17,39 @@ import java.util.Objects;
  * <p>
  * NOTE: we should not use Lombok here because we use MapStruct library which require hardcoded getter and setter of fields.
  */
+
+@Schema(
+        name = "CarDetailsDto",
+        description = "Schema about holding Car Details information"
+)
 public class CarDetailsDto {
 
     @NotBlank
+    @Size(max = 20)
+    @Schema(description = "Car title", example = "Skoda")
     private String title;
 
     @NotBlank
+    @Size(max = 50)
+    @Schema(description = "Car manufacturer title", example = "Skoda Auto")
     private String manufacturer;
 
     @NotNull
+    @Past
+    @Schema(description = "Car release date", example = "2022-06-12", pattern = "yyyy-MM-dd")
     private LocalDate releaseDate;
 
     @NotNull
+    @Past
+    @Schema(description = "Car purchase date by the customer", example = "2022-06-12", pattern = "yyyy-MM-dd")
     private LocalDate purchaseDate;
 
     @NotNull
+    @Schema(description = "Car fuel type", example = "PETROL")
     private Fuel fuel;
 
     @NotNull
+    @Schema(description = "Car transmission type", example = "MANUAL")
     private Transmission transmission;
 
     public String getTitle() {
