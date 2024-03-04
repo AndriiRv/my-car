@@ -2,9 +2,9 @@ package com.kent0k.customers.controller;
 
 import com.kent0k.customers.dto.ErrorResponseDto;
 import com.kent0k.customers.dto.ResponseDto;
-import com.kent0k.customers.dto.owner.OwnerDto;
-import com.kent0k.customers.dto.owner.OwnerSaveDto;
-import com.kent0k.customers.dto.owner.OwnerUpdateDto;
+import com.kent0k.customers.dto.ownercredentials.OwnerCredentialsDto;
+import com.kent0k.customers.dto.ownercredentials.OwnerCredentialsSaveDto;
+import com.kent0k.customers.dto.ownercredentials.OwnerCredentialsUpdateDto;
 import com.kent0k.customers.service.OwnerService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -16,57 +16,29 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(path = "/api/owners", produces = {MediaType.APPLICATION_JSON_VALUE})
+@RequestMapping(path = "/api/owner-credentials", produces = {MediaType.APPLICATION_JSON_VALUE})
 @Tag(
-        name = "CRUD REST APIs for Customers/Owners in 'My-car'",
-        description = "CRUD REST APIs in 'My-car' to CREATE, UPDATE, FETCH AND DELETE owner entities"
+        name = "CRUD REST APIs for Owner Credentials in 'My-car'",
+        description = "CRUD REST APIs in 'My-car' to CREATE, UPDATE, FETCH AND DELETE owner credentials entities"
 )
-public class OwnerController {
+public class OwnerCredentialsController {
 
-    private final OwnerService<OwnerDto, OwnerSaveDto, OwnerUpdateDto> ownerService;
+    private final OwnerService<OwnerCredentialsDto, OwnerCredentialsSaveDto, OwnerCredentialsUpdateDto> ownerService;
 
-    public OwnerController(@Qualifier(value = "ownerServiceImpl") OwnerService<OwnerDto, OwnerSaveDto, OwnerUpdateDto> ownerService) {
+    public OwnerCredentialsController(@Qualifier(value = "ownerCredentialsServiceImpl") OwnerService<OwnerCredentialsDto, OwnerCredentialsSaveDto, OwnerCredentialsUpdateDto> ownerService) {
         this.ownerService = ownerService;
     }
 
     @Operation(
-            summary = "Create Owner entity REST API",
-            description = "REST API to create new Owner and OwnerCredentials inside 'My-car'"
-    )
-    @ApiResponses({
-            @ApiResponse(
-                    responseCode = "201",
-                    description = "HTTP Status CREATED"
-            ),
-            @ApiResponse(
-                    responseCode = "500",
-                    description = "HTTP Status Internal Server Error",
-                    content = @Content(
-                            schema = @Schema(implementation = ErrorResponseDto.class)
-                    )
-            )
-    })
-    @PostMapping
-    public ResponseEntity<ResponseDto> save(@Validated @RequestBody OwnerSaveDto ownerSaveDto) {
-        return ownerService.save(ownerSaveDto)
-                ? ResponseEntity.status(HttpStatus.CREATED).body(new ResponseDto("Owner is created"))
-                : ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDto("Exception thrown during saving an owner"));
-    }
-
-    @Operation(
-            summary = "Fetch Owner entity REST API",
-            description = "REST API to fetch Owner entity based on an owners id"
+            summary = "Fetch Owner Credentials entity REST API",
+            description = "REST API to fetch OwnerCredentials entity based on an owner credentials id"
     )
     @ApiResponses({
             @ApiResponse(
@@ -82,13 +54,13 @@ public class OwnerController {
             )
     })
     @GetMapping
-    public ResponseEntity<ResponseDto> fetch(@RequestParam Integer id) {
+    public ResponseEntity<ResponseDto> fetch(Integer id) {
         return ResponseEntity.ok(new ResponseDto(ownerService.fetch(id), null));
     }
 
     @Operation(
-            summary = "Fetch all Owner entities REST API",
-            description = "REST API to fetch all Owner entities"
+            summary = "Fetch all Owner Credentials entities REST API",
+            description = "REST API to fetch all Owner Credentials entities"
     )
     @ApiResponses({
             @ApiResponse(
@@ -109,8 +81,8 @@ public class OwnerController {
     }
 
     @Operation(
-            summary = "Update Owner entity REST API",
-            description = "REST API to update Owner and OwnerCredentials entities based on a owners id"
+            summary = "Update Owner Credentials entity REST API",
+            description = "REST API to update OwnerCredentials entities based on a owner credentials id"
     )
     @ApiResponses({
             @ApiResponse(
@@ -126,15 +98,15 @@ public class OwnerController {
             )
     })
     @PutMapping
-    public ResponseEntity<ResponseDto> update(@Validated @RequestBody OwnerUpdateDto ownerUpdateDto) {
-        return ownerService.update(ownerUpdateDto)
-                ? ResponseEntity.ok(new ResponseDto("Owner is updated"))
-                : ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDto("Exception thrown during update an owner"));
+    public ResponseEntity<ResponseDto> update(OwnerCredentialsUpdateDto updateDto) {
+        return ownerService.update(updateDto)
+                ? ResponseEntity.ok(new ResponseDto("Owner credentials is updated"))
+                : ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDto("Exception thrown during update an owner credentials"));
     }
 
     @Operation(
-            summary = "Delete Owner, OwnerCredentials and OwnerNotification entities REST API",
-            description = "REST API to delete Owner, OwnerCredentials and OwnerNotification based on a owners id"
+            summary = "Delete Owner and OwnerCredentials and OwnerNotification entities REST API",
+            description = "REST API to delete Owner, OwnerCredentials and OwnerNotification based on a owner credentials id"
     )
     @ApiResponses({
             @ApiResponse(
@@ -150,9 +122,9 @@ public class OwnerController {
             )
     })
     @DeleteMapping
-    public ResponseEntity<ResponseDto> delete(@RequestParam Integer id) {
+    public ResponseEntity<ResponseDto> delete(Integer id) {
         return ownerService.delete(id)
-                ? ResponseEntity.ok(new ResponseDto("Owner is deleted"))
-                : ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDto("Exception thrown during delete an owner"));
+                ? ResponseEntity.ok(new ResponseDto("Owner and Owner credentials is deleted"))
+                : ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDto("Exception thrown during delete an owner credentials"));
     }
 }

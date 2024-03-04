@@ -1,12 +1,18 @@
 package com.kent0k.customers.dto.ownernotifications;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 
 import java.util.Objects;
 
+@Schema(
+        name = "OwnerNotificationsUpdateDto",
+        description = "Schema about holding OwnerNotifications information to update"
+)
 public class OwnerNotificationsUpdateDto extends OwnerNotificationsDto {
 
     @NotNull
+    @Schema(description = "OwnerNotifications identifier as integer value", example = "123")
     private Integer id;
 
     public Integer getId() {

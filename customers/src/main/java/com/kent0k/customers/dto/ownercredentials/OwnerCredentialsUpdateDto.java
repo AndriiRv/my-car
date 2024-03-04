@@ -1,13 +1,18 @@
 package com.kent0k.customers.dto.ownercredentials;
 
-import com.kent0k.customers.enums.DbBoolean;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 
 import java.util.Objects;
 
+@Schema(
+        name = "OwnerCredentialsUpdateDto",
+        description = "Schema about holding OwnerCredentials information to update"
+)
 public class OwnerCredentialsUpdateDto extends OwnerCredentialsDto {
 
     @NotNull
+    @Schema(description = "OwnerCredentials identifier as integer value", example = "123")
     private Integer id;
 
     public Integer getId() {

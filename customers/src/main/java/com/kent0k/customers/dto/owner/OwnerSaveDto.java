@@ -1,11 +1,17 @@
 package com.kent0k.customers.dto.owner;
 
 import com.kent0k.customers.dto.ownercredentials.OwnerCredentialsSaveDto;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.Objects;
 
+@Schema(
+        name = "OwnerSaveDto",
+        description = "Schema about holding Owner and OwnerCredentials information to save"
+)
 public class OwnerSaveDto extends OwnerDto {
 
+    @Schema(description = "Owner credentials data to save")
     private OwnerCredentialsSaveDto ownerCredentialsSaveDto;
 
     public OwnerCredentialsSaveDto getOwnerCredentialsSaveDto() {

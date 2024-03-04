@@ -1,23 +1,31 @@
 package com.kent0k.customers.dto.ownercredentials;
 
 import com.kent0k.customers.enums.DbBoolean;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 import java.util.Objects;
 
+@Schema(
+        name = "OwnerCredentialsDto",
+        description = "Schema about holding OwnerCredentials information"
+)
 public class OwnerCredentialsDto {
 
     @NotBlank
     @Size(max = 20)
+    @Schema(description = "Owners username", example = "john.smith")
     private String username;
 
     @NotBlank
     @Size(max = 20)
+    @Schema(description = "Owner password", example = "12345678")
     private String password;
 
     @NotNull
+    @Schema(description = "Owners account status", example = "Y")
     private DbBoolean isActive;
 
     public String getUsername() {
