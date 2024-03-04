@@ -1,5 +1,6 @@
 package com.kent0k.servicepartners.entity;
 
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -23,9 +24,11 @@ public class Worker extends BaseEntity {
     @Field(name = "birthDate", targetType = FieldType.DATE_TIME)
     private LocalDate birthDate;
 
+    @Indexed(unique = true)
     @Field(name = "email", targetType = FieldType.STRING)
     private String email;
 
+    @Indexed(unique = true)
     @Field(name = "phoneNumber", targetType = FieldType.STRING)
     private String phoneNumber;
 

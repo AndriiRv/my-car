@@ -1,19 +1,26 @@
 package com.kent0k.servicepartners.dto.carmaintenance;
 
 import com.kent0k.servicepartners.enums.MaintenanceWork;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
 
 import java.time.LocalDate;
 import java.util.Objects;
 
+@Schema(
+        name = "OwnerDto",
+        description = "Schema about holding Owner information"
+)
 public class CarMaintenanceDto {
 
     @NotNull
     @PastOrPresent
+    @Schema(description = "Car maintenance date", example = "2023-12-12")
     private LocalDate date;
 
     @NotNull
+    @Schema(description = "Type of car maintenance", example = "TECHNICAL_SERVICE")
     private MaintenanceWork maintenanceWork;
 
     public LocalDate getDate() {

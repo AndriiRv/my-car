@@ -9,12 +9,21 @@ import java.util.Objects;
 @Document("servicePartners")
 public class ServicePartner extends BaseEntity {
 
+    /**
+     * Service partner title.
+     */
     @Field(name = "title", targetType = FieldType.STRING)
     private String title;
 
+    /**
+     * Service partner address.
+     */
     @Field(name = "address", targetType = FieldType.STRING)
     private String address;
 
+    /**
+     * Current service partner working status.
+     */
     @Field(name = "currentWorkStatus", targetType = FieldType.BOOLEAN)
     private Boolean currentWorkStatus;
 

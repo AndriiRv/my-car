@@ -15,12 +15,23 @@ public class CarMaintenance extends BaseEntity {
     @Field(name = "carId", targetType = FieldType.INT32)
     private Integer carId; // should to be replaced with Car object which will come from 'cars' microservice
 
+    /**
+     * Link to the {@link ServicePartner}.
+     * <p>
+     * NOTE: Should be Many-To-One relation with ServicePartner entity.
+     */
     @DBRef
     private ServicePartner servicePartner;
 
+    /**
+     * Car maintenance date.
+     */
     @Field(name = "date", targetType = FieldType.DATE_TIME)
     private LocalDate date;
 
+    /**
+     * Type of car maintenance.
+     */
     @Field(name = "maintenanceWork", targetType = FieldType.STRING)
     private MaintenanceWork maintenanceWork;
 

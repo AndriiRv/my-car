@@ -1,5 +1,6 @@
 package com.kent0k.servicepartners.dto.worker;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
@@ -8,32 +9,43 @@ import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.Objects;
 
+@Schema(
+        name = "WorkerDto",
+        description = "Schema about holding Worker information"
+)
 public class WorkerDto {
 
     @NotBlank
     @Size(max = 20)
+    @Schema(description = "Workers firstname", example = "Arthur")
     private String firstName;
 
     @NotBlank
     @Size(max = 20)
+    @Schema(description = "Workers firstname", example = "Morgan")
     private String lastName;
 
     @NotNull
     @Past
+    @Schema(description = "Workers birth date", example = "1987-12-12")
     private LocalDate birthDate;
 
     @NotBlank
     @Size(max = 50)
+    @Schema(description = "Workers email", example = "example@gmail.com")
     private String email;
 
     @NotBlank
     @Size(max = 20)
+    @Schema(description = "Workers phone number", example = "+380671234567")
     private String phoneNumber;
 
     @NotNull
+    @Schema(description = "Whether worker has kids", example = "false")
     private Boolean hasKids;
 
     @NotNull
+    @Schema(description = "Whether worker is hired", example = "true")
     private Boolean isHired;
 
     public String getFirstName() {
