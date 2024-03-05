@@ -1,0 +1,14 @@
+
+spring:
+  application:
+    name: "configserver"
+
+  cloud:
+    config:
+      server:
+        git:
+          uri: "${springCloudConfigServerUrl}"
+          default-label: "${defaultBranch}"
+
+encrypt:
+  key: "${myCarEncryptionKey}"
