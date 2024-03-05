@@ -129,8 +129,8 @@ public class ServicePartnerController {
     }
 
     @Operation(
-            summary = "Delete Service Partner entity REST API",
-            description = "REST API to delete ServicePartner based on a servicePartners id"
+            summary = "Delete Service Partner, Worker and Car Maintenance entity REST API",
+            description = "REST API to delete ServicePartner, Worker and CarMaintenance based on a servicePartners id"
     )
     @ApiResponses({
             @ApiResponse(
