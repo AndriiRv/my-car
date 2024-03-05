@@ -23,3 +23,24 @@ spring:
       port: 27017
       username: mongoadmin
       password: bdung
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+eureka:
+  instance:
+    preferIpAddress: true
+  client:
+    fetchRegistry: true
+    registerWithEureka: true
+    serviceUrl:
+      defaultZone: http://localhost:8085/eureka/
+
+info:
+  app:
+    name: ${spring.application.name}
+    description: My-car ServicePartners Application
+    version: "v0.0.1"

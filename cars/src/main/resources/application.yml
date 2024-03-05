@@ -24,3 +24,24 @@ spring:
     change-log: classpath:/db/changelog/db-changelog.xml
   jpa:
     show-sql: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+eureka:
+  instance:
+    preferIpAddress: true
+  client:
+    fetchRegistry: true
+    registerWithEureka: true
+    serviceUrl:
+      defaultZone: http://localhost:8085/eureka/
+
+info:
+  app:
+    name: ${spring.application.name}
+    description: My-car Cars Application
+    version: "v0.0.1"
