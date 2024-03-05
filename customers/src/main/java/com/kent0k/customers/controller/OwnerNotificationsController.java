@@ -132,8 +132,8 @@ public class OwnerNotificationsController {
     }
 
     @Operation(
-            summary = "Delete Owner, OwnerCredentials and OwnerNotification entities REST API",
-            description = "REST API to delete Owner, OwnerCredentials and OwnerNotification based on a owner notifications id"
+            summary = "Delete OwnerNotification entities REST API",
+            description = "REST API to delete OwnerNotification based on a owner notifications id"
     )
     @ApiResponses({
             @ApiResponse(

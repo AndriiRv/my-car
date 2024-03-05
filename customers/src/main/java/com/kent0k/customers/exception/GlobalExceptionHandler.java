@@ -71,7 +71,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(OperationForbiddenException.class)
-    public ResponseEntity<ErrorResponseDto> handleResourceNotFoundException(OperationForbiddenException exception,
+    public ResponseEntity<ErrorResponseDto> handleOperationForbiddenException(OperationForbiddenException exception,
                                                                             WebRequest webRequest) {
         ErrorResponseDto errorResponseDTO = new ErrorResponseDto(
                 webRequest.getDescription(false),
@@ -80,6 +80,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 LocalDateTime.now()
         );
         LOG.error("Handled OperationForbiddenException: {}", exception.getMessage(), exception);
-        return new ResponseEntity<>(errorResponseDTO, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(errorResponseDTO, HttpStatus.CONFLICT);
     }
 }

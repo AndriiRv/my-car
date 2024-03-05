@@ -25,7 +25,7 @@ public class OwnerNotificationsDto {
 
     @NotBlank
     @Size(max = 100)
-    @Schema(description = "Owners notification message", example = "Notification is sent successfully")
+    @Schema(description = "Owners notification message", example = "Your car is ready.")
     private String message;
 
     @NotNull
