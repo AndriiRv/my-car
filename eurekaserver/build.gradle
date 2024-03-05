@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.2.2'
     id 'io.spring.dependency-management' version '1.1.4'
+    id 'com.google.cloud.tools.jib' version '3.4.0'
 }
 
 group = 'com.kent0k'
@@ -21,6 +22,15 @@ repositories {
 
 ext {
     set('springCloudVersion', "2023.0.0")
+}
+
+jib {
+    from {
+        image = "eclipse-temurin:21-jdk"
+    }
+    to {
+        image = 'kent0k/my-car-eurekaserver:s1'
+    }
 }
 
 dependencies {
