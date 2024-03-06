@@ -1,6 +1,7 @@
 package com.kent0k.cars.service;
 
 import com.kent0k.cars.dto.car.CarDto;
+import com.kent0k.cars.dto.car.CarResponseDto;
 import com.kent0k.cars.dto.car.CarSaveDto;
 import com.kent0k.cars.dto.car.CarUpdateDto;
 
@@ -10,7 +11,7 @@ public interface CarService {
 
     boolean save(CarSaveDto carSaveDto);
 
-    CarDto fetch(Integer id);
+    CarResponseDto fetch(Integer id);
 
     List<CarDto> fetchAll();
 

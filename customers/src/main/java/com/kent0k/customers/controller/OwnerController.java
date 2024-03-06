@@ -86,6 +86,11 @@ public class OwnerController {
         return ResponseEntity.ok(new ResponseDto(ownerService.fetch(id), null));
     }
 
+    @GetMapping("/raw")
+    public ResponseEntity<OwnerDto> fetchRaw(@RequestParam Integer id) {
+        return ResponseEntity.ok(ownerService.fetch(id));
+    }
+
     @Operation(
             summary = "Fetch all Owner entities REST API",
             description = "REST API to fetch all Owner entities"

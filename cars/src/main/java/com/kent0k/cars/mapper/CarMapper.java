@@ -1,6 +1,7 @@
 package com.kent0k.cars.mapper;
 
 import com.kent0k.cars.dto.car.CarDto;
+import com.kent0k.cars.dto.car.CarResponseDto;
 import com.kent0k.cars.dto.car.CarSaveDto;
 import com.kent0k.cars.dto.car.CarUpdateDto;
 import com.kent0k.cars.entity.Car;
@@ -12,6 +13,8 @@ import java.util.List;
 public interface CarMapper {
 
     CarDto mapToCarDto(Car car);
+
+    CarResponseDto mapToCarResponseDto(Car car);
 
     List<CarDto> mapToCarDtos(List<Car> cars);
 

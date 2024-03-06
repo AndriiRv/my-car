@@ -82,6 +82,11 @@ public class ServicePartnerController {
         return ResponseEntity.ok(new ResponseDto(servicePartnerService.fetch(id), null));
     }
 
+    @GetMapping("/raw")
+    public ResponseEntity<ServicePartnerWithIdDto> fetchRaw(@RequestParam Integer id) {
+        return ResponseEntity.ok(servicePartnerService.fetch(id));
+    }
+
     @Operation(
             summary = "Fetch all Service Partner entities REST API",
             description = "REST API to fetch all ServicePartner entities"
