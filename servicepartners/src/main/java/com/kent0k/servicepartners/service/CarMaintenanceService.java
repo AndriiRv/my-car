@@ -1,5 +1,6 @@
 package com.kent0k.servicepartners.service;
 
+import com.kent0k.servicepartners.dto.carmaintenance.CarMaintenanceResponseDto;
 import com.kent0k.servicepartners.dto.carmaintenance.CarMaintenanceSaveDto;
 import com.kent0k.servicepartners.dto.carmaintenance.CarMaintenanceWithIdDto;
 
@@ -9,7 +10,7 @@ public interface CarMaintenanceService {
 
     boolean save(CarMaintenanceSaveDto saveDto);
 
-    CarMaintenanceWithIdDto fetch(Integer id);
+    CarMaintenanceResponseDto fetch(Integer id);
 
     List<CarMaintenanceWithIdDto> fetchAll();
 

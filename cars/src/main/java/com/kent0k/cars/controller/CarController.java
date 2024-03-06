@@ -2,6 +2,7 @@ package com.kent0k.cars.controller;
 
 import com.kent0k.cars.dto.ErrorResponseDto;
 import com.kent0k.cars.dto.ResponseDto;
+import com.kent0k.cars.dto.car.CarResponseDto;
 import com.kent0k.cars.dto.car.CarSaveDto;
 import com.kent0k.cars.dto.car.CarUpdateDto;
 import com.kent0k.cars.service.CarService;
@@ -80,6 +81,11 @@ public class CarController {
     @GetMapping
     public ResponseEntity<ResponseDto> fetch(@RequestParam Integer id) {
         return ResponseEntity.ok(new ResponseDto(carService.fetch(id), null));
+    }
+
+    @GetMapping("/raw")
+    public ResponseEntity<CarResponseDto> fetchRaw(@RequestParam Integer id) {
+        return ResponseEntity.ok(carService.fetch(id));
     }
 
     @Operation(
