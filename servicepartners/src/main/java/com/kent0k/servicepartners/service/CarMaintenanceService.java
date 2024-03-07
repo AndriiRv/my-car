@@ -16,5 +16,7 @@ public interface CarMaintenanceService {
 
     boolean update(CarMaintenanceWithIdDto updateDto);
 
+    boolean updateIsSent(Integer carId, Integer ownerId);
+
     boolean delete(Integer id);
 }

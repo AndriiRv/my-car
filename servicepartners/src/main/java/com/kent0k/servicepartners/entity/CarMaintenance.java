@@ -15,6 +15,9 @@ public class CarMaintenance extends BaseEntity {
     @Field(name = "carId", targetType = FieldType.INT32)
     private Integer carId; // should to be replaced with Car object which will come from 'cars' microservice
 
+    @Field(name = "ownerId", targetType = FieldType.INT32)
+    private Integer ownerId;
+
     /**
      * Link to the {@link ServicePartner}.
      * <p>
@@ -47,6 +50,14 @@ public class CarMaintenance extends BaseEntity {
 
     public void setCarId(Integer carId) {
         this.carId = carId;
+    }
+
+    public Integer getOwnerId() {
+        return ownerId;
+    }
+
+    public void setOwnerId(Integer ownerId) {
+        this.ownerId = ownerId;
     }
 
     public ServicePartner getServicePartner() {
@@ -95,18 +106,19 @@ public class CarMaintenance extends BaseEntity {
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         CarMaintenance that = (CarMaintenance) o;
-        return Objects.equals(carId, that.carId) && Objects.equals(servicePartner, that.servicePartner) && Objects.equals(date, that.date) && maintenanceWork == that.maintenanceWork && Objects.equals(isDone, that.isDone) && Objects.equals(isSent, that.isSent);
+        return Objects.equals(carId, that.carId) && Objects.equals(ownerId, that.ownerId) && Objects.equals(servicePartner, that.servicePartner) && Objects.equals(date, that.date) && maintenanceWork == that.maintenanceWork && Objects.equals(isDone, that.isDone) && Objects.equals(isSent, that.isSent);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), carId, servicePartner, date, maintenanceWork, isDone, isSent);
+        return Objects.hash(super.hashCode(), carId, ownerId, servicePartner, date, maintenanceWork, isDone, isSent);
     }
 
     @Override
     public String toString() {
         return "CarMaintenance{" +
                 "carId=" + carId +
+                ", ownerId=" + ownerId +
                 ", servicePartner=" + servicePartner +
                 ", date=" + date +
                 ", maintenanceWork=" + maintenanceWork +

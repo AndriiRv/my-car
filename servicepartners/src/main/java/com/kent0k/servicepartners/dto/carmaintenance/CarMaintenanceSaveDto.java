@@ -24,6 +24,10 @@ public class CarMaintenanceSaveDto extends CarMaintenanceDto {
     private Integer carId;
 
     @NotNull
+    @Schema(description = "Owner id which connect CarMaintenance with Owner", example = "123")
+    private Integer ownerId;
+
+    @NotNull
     @Schema(description = "Service partner id which connect CarMaintenance with ServicePartner", example = "123")
     private Integer servicePartnerId;
 
@@ -47,6 +51,14 @@ public class CarMaintenanceSaveDto extends CarMaintenanceDto {
         this.carId = carId;
     }
 
+    public Integer getOwnerId() {
+        return ownerId;
+    }
+
+    public void setOwnerId(Integer ownerId) {
+        this.ownerId = ownerId;
+    }
+
     public Integer getServicePartnerId() {
         return servicePartnerId;
     }
@@ -55,6 +67,7 @@ public class CarMaintenanceSaveDto extends CarMaintenanceDto {
         this.servicePartnerId = servicePartnerId;
     }
 
+    @Override
     public Boolean getDone() {
         return isDone;
     }
@@ -65,12 +78,12 @@ public class CarMaintenanceSaveDto extends CarMaintenanceDto {
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         CarMaintenanceSaveDto that = (CarMaintenanceSaveDto) o;
-        return Objects.equals(id, that.id) && Objects.equals(carId, that.carId) && Objects.equals(servicePartnerId, that.servicePartnerId) && Objects.equals(isDone, that.isDone);
+        return Objects.equals(id, that.id) && Objects.equals(carId, that.carId) && Objects.equals(ownerId, that.ownerId) && Objects.equals(servicePartnerId, that.servicePartnerId) && Objects.equals(isDone, that.isDone);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), id, carId, servicePartnerId, isDone);
+        return Objects.hash(super.hashCode(), id, carId, ownerId, servicePartnerId, isDone);
     }
 
     @Override
@@ -78,6 +91,7 @@ public class CarMaintenanceSaveDto extends CarMaintenanceDto {
         return "CarMaintenanceSaveDto{" +
                 "id=" + id +
                 ", carId=" + carId +
+                ", ownerId=" + ownerId +
                 ", servicePartnerId=" + servicePartnerId +
                 ", isDone=" + isDone +
                 '}';

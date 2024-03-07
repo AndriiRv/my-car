@@ -14,6 +14,7 @@ import com.kent0k.servicepartners.repository.CarMaintenanceRepository;
 import com.kent0k.servicepartners.repository.ServicePartnerRepository;
 import com.kent0k.servicepartners.service.CarMaintenanceService;
 import com.kent0k.servicepartners.service.client.CarsFeignClient;
+import com.kent0k.servicepartners.service.client.OwnerFeignClient;
 import com.kent0k.servicepartners.util.ServicePartnersLogFactory;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
@@ -34,6 +35,7 @@ public class CarMaintenanceServiceImpl implements CarMaintenanceService {
     private final CarMaintenanceMapper carMaintenanceMapper;
     private final ServicePartnerMapper servicePartnerMapper;
     private final CarsFeignClient carsFeignClient;
+    private final OwnerFeignClient ownerFeignClient;
     private final StreamBridge streamBridge;
 
     @Transactional
@@ -43,6 +45,12 @@ public class CarMaintenanceServiceImpl implements CarMaintenanceService {
         carsFeignClient.isResourceAccessible(
                 () -> carsFeignClient.fetchRawBy(carId),
                 () -> new ResourceNotFoundException(String.format("Car with id as %s cannot be found.", carId))
+        );
+
+        Integer ownerId = saveDto.getOwnerId();
+        ownerFeignClient.isResourceAccessible(
+                () -> ownerFeignClient.fetchRawBy(ownerId),
+                () -> new ResourceNotFoundException(String.format("Owner with id as %s cannot be found.", ownerId))
         );
 
         saveDto.setId(carMaintenanceRepository.incrementAndGet());
@@ -80,6 +88,7 @@ public class CarMaintenanceServiceImpl implements CarMaintenanceService {
 
         CarMaintenance carMaintenance = carMaintenanceMapper.mapToCarMaintenance(updateDto);
         carMaintenance.setCarId(oldCarMaintenance.getCarId());
+        carMaintenance.setOwnerId(oldCarMaintenance.getOwnerId());
         carMaintenance.setServicePartner(oldCarMaintenance.getServicePartner());
         carMaintenanceRepository.save(carMaintenance);
 
@@ -90,6 +99,17 @@ public class CarMaintenanceServiceImpl implements CarMaintenanceService {
             LOG.info(String.format("Sent carId: %s and ownerId: %s via RabbitMQ to 'customers' microservice",
                     carMaintenance.getCarId(), carResponseDto.getOwnerDto().getId()));
         }
+
+        return true;
+    }
+
+    @Transactional
+    @Override
+    public boolean updateIsSent(Integer carId, Integer ownerId) {
+        CarMaintenance carMaintenance = carMaintenanceRepository.findByCarIdAndOwnerId(carId, ownerId)
+                .orElseThrow(() -> new ResourceNotFoundException(String.format("Car maintenance with carId as %s and ownerId as %s cannot be found.", carId, ownerId)));
+        carMaintenance.setSent(true);
+        carMaintenanceRepository.save(carMaintenance);
 
         return true;
     }
