@@ -1,4 +1,4 @@
-package com.kent0k.customers.dto.ownercredentials;
+package com.kent0k.customers.dto.owner;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
@@ -6,13 +6,13 @@ import jakarta.validation.constraints.NotNull;
 import java.util.Objects;
 
 @Schema(
-        name = "OwnerCredentialsUpdateDto",
-        description = "Schema about holding OwnerCredentials information to update"
+        name = "OwnerWithIdDto",
+        description = "Schema about holding Owner information to update"
 )
-public class OwnerCredentialsUpdateDto extends OwnerCredentialsDto {
+public class OwnerWithIdDto extends OwnerDto {
 
     @NotNull
-    @Schema(description = "OwnerCredentials identifier as integer value", example = "123")
+    @Schema(description = "Owner identifier as integer value", example = "123")
     private Integer id;
 
     public Integer getId() {
@@ -28,7 +28,7 @@ public class OwnerCredentialsUpdateDto extends OwnerCredentialsDto {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
-        OwnerCredentialsUpdateDto that = (OwnerCredentialsUpdateDto) o;
+        OwnerWithIdDto that = (OwnerWithIdDto) o;
         return Objects.equals(id, that.id);
     }
 
@@ -39,7 +39,7 @@ public class OwnerCredentialsUpdateDto extends OwnerCredentialsDto {
 
     @Override
     public String toString() {
-        return "OwnerCredentialsUpdateDto{" +
+        return "OwnerWithIdDto{" +
                 "id=" + id +
                 '}';
     }

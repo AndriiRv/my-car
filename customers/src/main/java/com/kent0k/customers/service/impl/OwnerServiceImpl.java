@@ -1,8 +1,7 @@
 package com.kent0k.customers.service.impl;
 
-import com.kent0k.customers.dto.owner.OwnerDto;
 import com.kent0k.customers.dto.owner.OwnerSaveDto;
-import com.kent0k.customers.dto.owner.OwnerUpdateDto;
+import com.kent0k.customers.dto.owner.OwnerWithIdDto;
 import com.kent0k.customers.entity.Owner;
 import com.kent0k.customers.entity.OwnerCredentials;
 import com.kent0k.customers.exception.ResourceNotFoundException;
@@ -19,7 +18,7 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
-public class OwnerServiceImpl implements OwnerService<OwnerDto, OwnerSaveDto, OwnerUpdateDto> {
+public class OwnerServiceImpl implements OwnerService {
 
     private final OwnerRepository ownerRepository;
     private final OwnerCredentialsRepository ownerCredentialsRepository;
@@ -39,19 +38,19 @@ public class OwnerServiceImpl implements OwnerService<OwnerDto, OwnerSaveDto, Ow
     }
 
     @Override
-    public OwnerDto fetch(Integer id) {
+    public OwnerWithIdDto fetch(Integer id) {
         Owner owner = ownerRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(String.format("Owner with id as %s cannot be found.", id)));
-        return ownerMapper.mapToOwnerDto(owner);
+        return ownerMapper.mapToOwnerWithIdDto(owner);
     }
 
     @Override
-    public List<OwnerDto> fetchAll() {
-        return ownerMapper.mapToOwnerDtos(ownerRepository.findAll());
+    public List<OwnerWithIdDto> fetchAll() {
+        return ownerMapper.mapToOwnerWithIdDtos(ownerRepository.findAll());
     }
 
     @Transactional
     @Override
-    public boolean update(OwnerUpdateDto ownerUpdateDto) {
+    public boolean update(OwnerWithIdDto ownerUpdateDto) {
         final Integer ownerId = ownerUpdateDto.getId();
 
         ownerRepository.findById(ownerId)

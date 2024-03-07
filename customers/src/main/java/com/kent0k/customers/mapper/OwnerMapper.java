@@ -1,8 +1,7 @@
 package com.kent0k.customers.mapper;
 
-import com.kent0k.customers.dto.owner.OwnerDto;
 import com.kent0k.customers.dto.owner.OwnerSaveDto;
-import com.kent0k.customers.dto.owner.OwnerUpdateDto;
+import com.kent0k.customers.dto.owner.OwnerWithIdDto;
 import com.kent0k.customers.entity.Owner;
 import org.mapstruct.Mapper;
 
@@ -13,9 +12,9 @@ public interface OwnerMapper {
 
     Owner mapToOwner(OwnerSaveDto ownerSaveDto);
 
-    Owner mapToOwner(OwnerUpdateDto ownerUpdateDto);
+    Owner mapToOwner(OwnerWithIdDto ownerWithIdDto);
 
-    OwnerDto mapToOwnerDto(Owner owner);
+    OwnerWithIdDto mapToOwnerWithIdDto(Owner owner);
 
-    List<OwnerDto> mapToOwnerDtos(List<Owner> owners);
+    List<OwnerWithIdDto> mapToOwnerWithIdDtos(List<Owner> owners);
 }

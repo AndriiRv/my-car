@@ -4,7 +4,7 @@ import com.kent0k.customers.dto.ErrorResponseDto;
 import com.kent0k.customers.dto.ResponseDto;
 import com.kent0k.customers.dto.owner.OwnerDto;
 import com.kent0k.customers.dto.owner.OwnerSaveDto;
-import com.kent0k.customers.dto.owner.OwnerUpdateDto;
+import com.kent0k.customers.dto.owner.OwnerWithIdDto;
 import com.kent0k.customers.service.OwnerService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -12,7 +12,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Qualifier;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -28,17 +28,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(path = "/api/owners", produces = {MediaType.APPLICATION_JSON_VALUE})
+@AllArgsConstructor
 @Tag(
         name = "CRUD REST APIs for Customers/Owners in 'My-car'",
         description = "CRUD REST APIs in 'My-car' to CREATE, UPDATE, FETCH AND DELETE owner entities"
 )
 public class OwnerController {
 
-    private final OwnerService<OwnerDto, OwnerSaveDto, OwnerUpdateDto> ownerService;
-
-    public OwnerController(@Qualifier(value = "ownerServiceImpl") OwnerService<OwnerDto, OwnerSaveDto, OwnerUpdateDto> ownerService) {
-        this.ownerService = ownerService;
-    }
+    private final OwnerService ownerService;
 
     @Operation(
             summary = "Create Owner entity REST API",
@@ -131,7 +128,7 @@ public class OwnerController {
             )
     })
     @PutMapping
-    public ResponseEntity<ResponseDto> update(@Validated @RequestBody OwnerUpdateDto ownerUpdateDto) {
+    public ResponseEntity<ResponseDto> update(@Validated @RequestBody OwnerWithIdDto ownerUpdateDto) {
         return ownerService.update(ownerUpdateDto)
                 ? ResponseEntity.ok(new ResponseDto("Owner is updated"))
                 : ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDto("Exception thrown during update an owner"));

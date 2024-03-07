@@ -16,6 +16,8 @@ import java.util.Objects;
 )
 public class OwnerDto {
 
+    private Integer id;
+
     @NotBlank
     @Size(max = 20)
     @Schema(description = "Owners firstname", example = "John")
@@ -41,6 +43,14 @@ public class OwnerDto {
     @Size(max = 20)
     @Schema(description = "Owners phone number", example = "+380971234567")
     private String phoneNumber;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public String getFirstName() {
         return firstName;
@@ -87,18 +97,19 @@ public class OwnerDto {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         OwnerDto ownerDto = (OwnerDto) o;
-        return Objects.equals(firstName, ownerDto.firstName) && Objects.equals(lastName, ownerDto.lastName) && Objects.equals(birthDate, ownerDto.birthDate) && Objects.equals(email, ownerDto.email) && Objects.equals(phoneNumber, ownerDto.phoneNumber);
+        return Objects.equals(id, ownerDto.id) && Objects.equals(firstName, ownerDto.firstName) && Objects.equals(lastName, ownerDto.lastName) && Objects.equals(birthDate, ownerDto.birthDate) && Objects.equals(email, ownerDto.email) && Objects.equals(phoneNumber, ownerDto.phoneNumber);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(firstName, lastName, birthDate, email, phoneNumber);
+        return Objects.hash(id, firstName, lastName, birthDate, email, phoneNumber);
     }
 
     @Override
     public String toString() {
         return "OwnerDto{" +
-                "firstName='" + firstName + '\'' +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", birthDate=" + birthDate +
                 ", email='" + email + '\'' +

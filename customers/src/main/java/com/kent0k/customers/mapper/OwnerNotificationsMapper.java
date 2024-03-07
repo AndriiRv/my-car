@@ -1,7 +1,7 @@
 package com.kent0k.customers.mapper;
 
 import com.kent0k.customers.dto.ownernotifications.OwnerNotificationsDto;
-import com.kent0k.customers.dto.ownernotifications.OwnerNotificationsUpdateDto;
+import com.kent0k.customers.dto.ownernotifications.OwnerNotificationsWithIdDto;
 import com.kent0k.customers.entity.OwnerNotifications;
 import org.mapstruct.Mapper;
 
@@ -12,9 +12,9 @@ public interface OwnerNotificationsMapper {
 
     OwnerNotifications mapToOwnerNotifications(OwnerNotificationsDto ownerNotificationsDto);
 
-    OwnerNotifications mapToOwnerNotifications(OwnerNotificationsUpdateDto ownerNotificationsUpdateDto);
+    OwnerNotifications mapToOwnerNotifications(OwnerNotificationsWithIdDto ownerNotificationsWithIdDto);
 
-    OwnerNotificationsDto mapToOwnerNotificationsDto(OwnerNotifications ownerNotifications);
+    OwnerNotificationsWithIdDto mapToOwnerNotificationsWithIdDto(OwnerNotifications ownerNotifications);
 
-    List<OwnerNotificationsDto> mapToOwnerNotificationsDtos(List<OwnerNotifications> ownerNotifications);
+    List<OwnerNotificationsWithIdDto> mapToOwnerNotificationsWithIdDtos(List<OwnerNotifications> ownerNotifications);
 }

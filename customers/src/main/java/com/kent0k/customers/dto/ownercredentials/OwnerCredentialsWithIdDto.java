@@ -1,4 +1,4 @@
-package com.kent0k.customers.dto.ownernotifications;
+package com.kent0k.customers.dto.ownercredentials;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
@@ -6,13 +6,13 @@ import jakarta.validation.constraints.NotNull;
 import java.util.Objects;
 
 @Schema(
-        name = "OwnerNotificationsUpdateDto",
-        description = "Schema about holding OwnerNotifications information to update"
+        name = "OwnerCredentialsWithIdDto",
+        description = "Schema about holding OwnerCredentials information"
 )
-public class OwnerNotificationsUpdateDto extends OwnerNotificationsDto {
+public class OwnerCredentialsWithIdDto extends OwnerCredentialsDto {
 
     @NotNull
-    @Schema(description = "OwnerNotifications identifier as integer value", example = "123")
+    @Schema(description = "OwnerCredentials identifier as integer value", example = "123")
     private Integer id;
 
     public Integer getId() {
@@ -27,18 +27,19 @@ public class OwnerNotificationsUpdateDto extends OwnerNotificationsDto {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        OwnerNotificationsUpdateDto that = (OwnerNotificationsUpdateDto) o;
+        if (!super.equals(o)) return false;
+        OwnerCredentialsWithIdDto that = (OwnerCredentialsWithIdDto) o;
         return Objects.equals(id, that.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(super.hashCode(), id);
     }
 
     @Override
     public String toString() {
-        return "OwnerNotificationsUpdateDto{" +
+        return "OwnerCredentialsWithIdDto{" +
                 "id=" + id +
                 '}';
     }
