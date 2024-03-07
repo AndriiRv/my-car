@@ -27,6 +27,10 @@ public class CarMaintenanceSaveDto extends CarMaintenanceDto {
     @Schema(description = "Service partner id which connect CarMaintenance with ServicePartner", example = "123")
     private Integer servicePartnerId;
 
+    @JsonIgnore
+    @Schema(description = "Whether car maintenance is done. Should be as FALSE during create new CarMaintenance", example = "false")
+    private final Boolean isDone = false;
+
     public Integer getId() {
         return id;
     }
@@ -51,18 +55,22 @@ public class CarMaintenanceSaveDto extends CarMaintenanceDto {
         this.servicePartnerId = servicePartnerId;
     }
 
+    public Boolean getDone() {
+        return isDone;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         CarMaintenanceSaveDto that = (CarMaintenanceSaveDto) o;
-        return Objects.equals(id, that.id) && Objects.equals(carId, that.carId) && Objects.equals(servicePartnerId, that.servicePartnerId);
+        return Objects.equals(id, that.id) && Objects.equals(carId, that.carId) && Objects.equals(servicePartnerId, that.servicePartnerId) && Objects.equals(isDone, that.isDone);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), id, carId, servicePartnerId);
+        return Objects.hash(super.hashCode(), id, carId, servicePartnerId, isDone);
     }
 
     @Override
@@ -71,6 +79,7 @@ public class CarMaintenanceSaveDto extends CarMaintenanceDto {
                 "id=" + id +
                 ", carId=" + carId +
                 ", servicePartnerId=" + servicePartnerId +
+                ", isDone=" + isDone +
                 '}';
     }
 }

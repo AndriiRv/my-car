@@ -9,6 +9,15 @@ spring:
     active: production
   config:
     import: optional:configserver:http://localhost:8084/
+  cloud:
+    function:
+      definition: saveNotification
+    stream:
+      default-binder: rabbit
+      bindings:
+        saveNotification-in-0:
+          destination: carmaintenance-message-dto-from-customers-microservice
+          group: ${spring.application.name}
 
   rabbitmq:
     host: localhost

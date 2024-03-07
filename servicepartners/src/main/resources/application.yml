@@ -9,6 +9,12 @@ spring:
     active: production
   config:
     import: optional:configserver:http://localhost:8084/
+  cloud:
+    stream:
+      default-binder: rabbit
+      bindings:
+        sendIsReadyCommunication-out-0:
+          destination: carmaintenance-message-dto-from-customers-microservice
 
   rabbitmq:
     host: localhost

@@ -23,6 +23,9 @@ public class CarMaintenanceDto {
     @Schema(description = "Type of car maintenance", example = "TECHNICAL_SERVICE")
     private MaintenanceWork maintenanceWork;
 
+    @Schema(description = "Whether car maintenance is done.", example = "false")
+    private Boolean isDone;
+
     public LocalDate getDate() {
         return date;
     }
@@ -39,17 +42,25 @@ public class CarMaintenanceDto {
         this.maintenanceWork = maintenanceWork;
     }
 
+    public Boolean getDone() {
+        return isDone;
+    }
+
+    public void setDone(Boolean done) {
+        isDone = done;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CarMaintenanceDto that = (CarMaintenanceDto) o;
-        return Objects.equals(date, that.date) && maintenanceWork == that.maintenanceWork;
+        return Objects.equals(date, that.date) && maintenanceWork == that.maintenanceWork && Objects.equals(isDone, that.isDone);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(date, maintenanceWork);
+        return Objects.hash(date, maintenanceWork, isDone);
     }
 
     @Override
@@ -57,6 +68,7 @@ public class CarMaintenanceDto {
         return "CarMaintenanceDto{" +
                 "date=" + date +
                 ", maintenanceWork=" + maintenanceWork +
+                ", isDone=" + isDone +
                 '}';
     }
 }

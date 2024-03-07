@@ -35,6 +35,12 @@ public class CarMaintenance extends BaseEntity {
     @Field(name = "maintenanceWork", targetType = FieldType.STRING)
     private MaintenanceWork maintenanceWork;
 
+    @Field(name = "isDone", targetType = FieldType.BOOLEAN)
+    private Boolean isDone;
+
+    @Field(name = "isSent", targetType = FieldType.BOOLEAN)
+    private Boolean isSent;
+
     public Integer getCarId() {
         return carId;
     }
@@ -67,18 +73,34 @@ public class CarMaintenance extends BaseEntity {
         this.maintenanceWork = maintenanceWork;
     }
 
+    public Boolean getDone() {
+        return isDone;
+    }
+
+    public void setDone(Boolean done) {
+        isDone = done;
+    }
+
+    public Boolean getSent() {
+        return isSent;
+    }
+
+    public void setSent(Boolean sent) {
+        isSent = sent;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         CarMaintenance that = (CarMaintenance) o;
-        return Objects.equals(carId, that.carId) && Objects.equals(servicePartner, that.servicePartner) && Objects.equals(date, that.date) && maintenanceWork == that.maintenanceWork;
+        return Objects.equals(carId, that.carId) && Objects.equals(servicePartner, that.servicePartner) && Objects.equals(date, that.date) && maintenanceWork == that.maintenanceWork && Objects.equals(isDone, that.isDone) && Objects.equals(isSent, that.isSent);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), carId, servicePartner, date, maintenanceWork);
+        return Objects.hash(super.hashCode(), carId, servicePartner, date, maintenanceWork, isDone, isSent);
     }
 
     @Override
@@ -88,6 +110,8 @@ public class CarMaintenance extends BaseEntity {
                 ", servicePartner=" + servicePartner +
                 ", date=" + date +
                 ", maintenanceWork=" + maintenanceWork +
+                ", isDone=" + isDone +
+                ", isSent=" + isSent +
                 '}';
     }
 }
