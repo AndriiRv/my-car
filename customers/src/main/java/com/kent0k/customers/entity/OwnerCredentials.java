@@ -24,12 +24,12 @@ public class OwnerCredentials extends BaseEntity {
     private Owner owner;
 
     @NotBlank
-    @Size(max = 20)
+    @Size(max = 765)
     @Column(name = "USERNAME")
     private String username;
 
     @NotBlank
-    @Size(max = 20)
+    @Size(max = 765)
     @Column(name = "PASSWORD")
     private String password;
 

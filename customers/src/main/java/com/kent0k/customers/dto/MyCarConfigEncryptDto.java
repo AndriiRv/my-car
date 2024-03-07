@@ -7,13 +7,9 @@ import org.springframework.stereotype.Component;
 
 @Component
 @EnableConfigurationProperties
-@ConfigurationProperties(value = "my-car-config")
+@ConfigurationProperties(value = "my-car-config.encrypt")
 @Data
-public class MyCarConfigDto {
+public class MyCarConfigEncryptDto {
 
-    private String version;
-    private String microserviceName;
-    private String profile;
-    private String author;
-    private String authorsSocialAccountUrl;
+    private String password;
 }

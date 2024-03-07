@@ -10,6 +10,7 @@ import com.kent0k.customers.mapper.OwnerMapper;
 import com.kent0k.customers.repository.OwnerCredentialsRepository;
 import com.kent0k.customers.repository.OwnerRepository;
 import com.kent0k.customers.service.OwnerService;
+import com.kent0k.customers.helper.EncryptDecryptHelper;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +25,7 @@ public class OwnerServiceImpl implements OwnerService {
     private final OwnerCredentialsRepository ownerCredentialsRepository;
     private final OwnerMapper ownerMapper;
     private final OwnerCredentialsMapper ownerCredentialsMapper;
+    private final EncryptDecryptHelper encryptDecryptHelper;
 
     @Transactional
     @Override
@@ -32,6 +34,10 @@ public class OwnerServiceImpl implements OwnerService {
 
         OwnerCredentials ownerCredentials = ownerCredentialsMapper.mapToOwnerCredentials(ownerSaveDto.getOwnerCredentialsSaveDto());
         ownerCredentials.setOwner(owner);
+
+        ownerCredentials.setUsername(encryptDecryptHelper.encrypt(ownerCredentials.getUsername()));
+        ownerCredentials.setPassword(encryptDecryptHelper.encrypt(ownerCredentials.getPassword()));
+
         ownerCredentialsRepository.save(ownerCredentials);
 
         return true;
