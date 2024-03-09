@@ -29,6 +29,7 @@ spring:
       port: 27017
       username: mongoadmin
       password: bdung
+      auto-index-creation: true
 
 management:
   endpoints:
