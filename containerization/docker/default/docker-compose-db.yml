@@ -1,0 +1,56 @@
+
+services:
+
+  cars-db-container:
+    image: postgres
+    container_name: cars-db-container
+    networks:
+      - mycarsharednetwork
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      PGUSER: postgres
+      POSTGRES_DB: cars
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-d", "cars" ]
+      timeout: 10s
+      retries: 10
+      interval: 10s
+      start_period: 10s
+
+  customers-db-container:
+    image: "container-registry.oracle.com/database/express:18.4.0-xe"
+    container_name: customers-db-container
+    ports:
+      - 1521:1521
+      - 5500:5500
+    environment:
+      - "ORACLE_PWD=oracle" # should be as private value
+#   volumes:
+#     - oracle-db-scripts-volume:/opt/oracle/scripts/setup
+    healthcheck:
+      test: [ "CMD", "/opt/oracle/checkDBStatus.sh" ]
+      timeout: 10s
+      retries: 100
+      interval: 30s
+    networks:
+      - mycarsharednetwork
+
+  servicepartners-db-container:
+    container_name: servicepartners-db-container
+    image: mongo
+    ports:
+      - '27017:27017'
+    networks:
+      - mycarsharednetwork
+    restart: always
+    logging:
+      options:
+        max-size: 1g
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=mongoadmin
+      - MONGO_INITDB_ROOT_PASSWORD=bdung
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
