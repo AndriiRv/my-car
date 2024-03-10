@@ -4,8 +4,6 @@ services:
   cars-db-container:
     image: postgres
     container_name: cars-db-container
-    networks:
-      - mycarsharednetwork
     ports:
       - 5432:5432
     environment:
@@ -19,6 +17,9 @@ services:
       retries: 10
       interval: 10s
       start_period: 10s
+    extends:
+      file: common-config.yml
+      service: base-container-config
 
   customers-db-container:
     image: "container-registry.oracle.com/database/express:18.4.0-xe"
@@ -35,16 +36,19 @@ services:
       timeout: 10s
       retries: 100
       interval: 30s
-    networks:
-      - mycarsharednetwork
+    extends:
+      file: common-config.yml
+      service: base-container-config
+    deploy:
+      resources:
+        limits:
+          memory: 3072m
 
   servicepartners-db-container:
     container_name: servicepartners-db-container
     image: mongo
     ports:
       - '27017:27017'
-    networks:
-      - mycarsharednetwork
     restart: always
     logging:
       options:
@@ -54,3 +58,6 @@ services:
       - MONGO_INITDB_ROOT_PASSWORD=bdung
     healthcheck:
       test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+    extends:
+      file: common-config.yml
+      service: base-container-config

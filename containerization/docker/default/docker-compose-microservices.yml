@@ -6,8 +6,6 @@ services:
     container_name: configserver-container
     ports:
       - 8084:8084
-    networks:
-      - mycarsharednetwork
     volumes:
       - ssh-volume:/root/.ssh
     healthcheck:
@@ -16,12 +14,12 @@ services:
       timeout: 5s
       retries: 20
       start_period: 10s
-    environment:
-      SPRING_PROFILES_ACTIVE: default
-      SPRING_RABBITMQ_HOST: rabbitmq-spring-app
     depends_on:
       rabbit-container:
         condition: service_healthy
+    extends:
+      file: common-config.yml
+      service: common-microservice-config
 
   eurekaserver-container:
     image: kent0k/my-car-eurekaserver:${DOCKER_IMAGE_TAG_VALUE}
@@ -34,12 +32,9 @@ services:
       timeout: 5s
       retries: 20
       start_period: 10s
-    environment:
-      SPRING_PROFILES_ACTIVE: default
-      SPRING_RABBITMQ_HOST: rabbitmq-spring-app
-      SPRING_CONFIG_IMPORT: configserver:http://configserver-container:8084
-    networks:
-      - mycarsharednetwork
+    extends:
+      file: common-config.yml
+      service: configserver-microservice-config
     depends_on:
       configserver-container:
         condition: service_healthy
@@ -50,11 +45,6 @@ services:
     ports:
       - 8086:8086
     environment:
-      SPRING_PROFILES_ACTIVE: default
-      SPRING_CONFIG_IMPORT: configserver:http://configserver-container:8084
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver-container:8085/eureka
-    networks:
-      - mycarsharednetwork
     depends_on:
       cars-container:
         condition: service_healthy
@@ -64,3 +54,6 @@ services:
         condition: service_healthy
       eurekaserver-container:
         condition: service_healthy
+    extends:
+      file: common-config.yml
+      service: eurekaserver-microservice-config

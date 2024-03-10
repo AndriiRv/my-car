@@ -1,0 +1,29 @@
+
+services:
+
+  base-container-config:
+    deploy:
+      resources:
+        limits:
+          memory: 500m
+    networks:
+      - mycarsharednetwork
+
+  common-microservice-config:
+    extends:
+      service: base-container-config
+    environment:
+      SPRING_PROFILES_ACTIVE: default
+      SPRING_RABBITMQ_HOST: rabbitmq-spring-app
+
+  configserver-microservice-config:
+    extends:
+      service: common-microservice-config
+    environment:
+      SPRING_CONFIG_IMPORT: configserver:http://configserver-container:8084
+
+  eurekaserver-microservice-config:
+    extends:
+      service: configserver-microservice-config
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver-container:8085/eureka

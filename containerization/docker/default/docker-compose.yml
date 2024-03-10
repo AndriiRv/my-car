@@ -6,14 +6,15 @@ services:
     container_name: redis-container
     ports:
       - 6379:6379
-    networks:
-      - mycarsharednetwork
     healthcheck:
       test: [ "CMD-SHELL", "redis-cli ping | grep PONG" ]
       interval: 20s
       timeout: 5s
       retries: 20
       start_period: 10s
+    extends:
+      file: common-config.yml
+      service: base-container-config
 
   keycloak-container:
     image: quay.io/keycloak/keycloak:22.0.1
@@ -24,8 +25,9 @@ services:
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
     command: "start-dev"
-    networks:
-      - mycarsharednetwork
+    extends:
+      file: common-config.yml
+      service: base-container-config
 
 networks:
   mycarsharednetwork:
