@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(path = "/api/cars/info", produces = {MediaType.APPLICATION_JSON_VALUE})
+@RequestMapping(path = "/api/servicepartners/info", produces = {MediaType.APPLICATION_JSON_VALUE})
 @AllArgsConstructor
 @Tag(
         name = "REST APIs with information data about ServicePartner",
