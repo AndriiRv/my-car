@@ -24,6 +24,9 @@ spring:
     change-log: classpath:/db/changelog/db-changelog.xml
   jpa:
     show-sql: true
+  graphql:
+    graphiql:
+      enabled: true
 
 management:
   endpoints:

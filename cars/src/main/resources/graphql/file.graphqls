@@ -1,0 +1,28 @@
+type Query {
+    carById(id: ID): CarGraphQlDto
+}
+
+type CarGraphQlDto {
+    id: ID
+    carDetails: CarDetailsGraphQlDto
+    carStatistics: CarStatisticsGraphQlDto
+}
+
+type CarDetailsGraphQlDto {
+    id: ID
+    title: String
+    manufacturer: String
+    releaseDate: String
+    purchaseDate: String
+    fuel: String
+    transmission: String
+}
+
+type CarStatisticsGraphQlDto {
+    id: ID
+    mileage: Float
+    averageSpeed: Float
+    averageFuelConsumption: Float
+    lastTimeAfterEngineStartSeconds: Int
+    averageRideTimeSeconds: Int
+}
