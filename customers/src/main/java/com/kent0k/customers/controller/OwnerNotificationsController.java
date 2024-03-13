@@ -5,6 +5,7 @@ import com.kent0k.customers.dto.ResponseDto;
 import com.kent0k.customers.dto.ownernotifications.OwnerNotificationsDto;
 import com.kent0k.customers.dto.ownernotifications.OwnerNotificationsWithIdDto;
 import com.kent0k.customers.service.OwnerNotificationsService;
+import com.kent0k.customers.service.OwnerService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.*;
 public class OwnerNotificationsController {
 
     private final OwnerNotificationsService ownerNotificationsService;
+    private final OwnerService ownerService;
 
     @Operation(
             summary = "Create Owner notification entity REST API",
@@ -118,6 +120,13 @@ public class OwnerNotificationsController {
     public ResponseEntity<ResponseDto> update(@Validated @RequestBody OwnerNotificationsWithIdDto updateDto) {
         return ownerNotificationsService.update(updateDto)
                 ? ResponseEntity.ok(new ResponseDto("Owner notification is updated"))
+                : ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDto("Exception thrown during update an owner notification"));
+    }
+
+    @PutMapping("/update-notification-is_sent-status")
+    public ResponseEntity<ResponseDto> updateNotificationIsSentStatus() {
+        return ownerService.updateNotificationIsSentStatus()
+                ? ResponseEntity.ok(new ResponseDto("Missing notification is updated with 'is_sent' as Y"))
                 : ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDto("Exception thrown during update an owner notification"));
     }
 

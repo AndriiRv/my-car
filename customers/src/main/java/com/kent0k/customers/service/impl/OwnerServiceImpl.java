@@ -9,12 +9,14 @@ import com.kent0k.customers.mapper.OwnerCredentialsMapper;
 import com.kent0k.customers.mapper.OwnerMapper;
 import com.kent0k.customers.repository.OwnerCredentialsRepository;
 import com.kent0k.customers.repository.OwnerRepository;
+import com.kent0k.customers.repository.impl.OwnerJdbcRepositoryImpl;
 import com.kent0k.customers.service.OwnerService;
 import com.kent0k.customers.helper.EncryptDecryptHelper;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.SQLException;
 import java.util.List;
 
 @Service
@@ -26,6 +28,7 @@ public class OwnerServiceImpl implements OwnerService {
     private final OwnerMapper ownerMapper;
     private final OwnerCredentialsMapper ownerCredentialsMapper;
     private final EncryptDecryptHelper encryptDecryptHelper;
+    private final OwnerJdbcRepositoryImpl ownerJdbcRepositoryImpl;
 
     @Transactional
     @Override
@@ -52,6 +55,11 @@ public class OwnerServiceImpl implements OwnerService {
     @Override
     public List<OwnerWithIdDto> fetchAll() {
         return ownerMapper.mapToOwnerWithIdDtos(ownerRepository.findAll());
+    }
+
+    @Override
+    public boolean updateNotificationIsSentStatus() {
+        return ownerJdbcRepositoryImpl.updateNotificationIsSentStatus();
     }
 
     @Transactional

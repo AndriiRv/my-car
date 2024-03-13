@@ -13,6 +13,8 @@ public interface OwnerService {
 
     List<OwnerWithIdDto> fetchAll();
 
+    boolean updateNotificationIsSentStatus();
+
     boolean update(OwnerWithIdDto updateDto);
 
     boolean delete(Integer id);
