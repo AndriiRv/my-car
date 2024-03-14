@@ -1,0 +1,63 @@
+
+services:
+
+  configserver-container:
+    image: kent0k/my-car-configserver:${DOCKER_IMAGE_TAG_VALUE}
+    container_name: configserver-container
+    ports:
+      - 8084:8084
+    volumes:
+      - ssh-volume:/root/.ssh
+    healthcheck:
+      test: "curl --fail --silent localhost:8084/actuator/health/readiness | grep UP || exit 1"
+      interval: 20s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
+    environment:
+      springCloudConfigServerUrl: "git@github.com:AndriiRv/my-car-config.git"
+      defaultBranch: "main"
+      myCarEncryptionKey: "CCAB416B6FBEB779DB355F5A72CD6" # NOTE: should be passed from external sources.
+    depends_on:
+      rabbit-container:
+        condition: service_healthy
+    extends:
+      file: common-config.yml
+      service: common-microservice-config
+
+  eurekaserver-container:
+    image: kent0k/my-car-eurekaserver:${DOCKER_IMAGE_TAG_VALUE}
+    container_name: eurekaserver-container
+    ports:
+      - 8085:8085
+    healthcheck:
+      test: "curl --fail --silent localhost:8085/actuator/health/readiness | grep UP || exit 1"
+      interval: 20s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
+    extends:
+      file: common-config.yml
+      service: configserver-microservice-config
+    depends_on:
+      configserver-container:
+        condition: service_healthy
+
+  gatewayserver-container:
+    image: kent0k/my-car-gatewayserver:${DOCKER_IMAGE_TAG_VALUE}
+    container_name: gatewayserver-container
+    ports:
+      - 8086:8086
+    environment:
+    depends_on:
+      cars-container:
+        condition: service_healthy
+      customers-container:
+        condition: service_healthy
+      servicepartners-container:
+        condition: service_healthy
+      eurekaserver-container:
+        condition: service_healthy
+    extends:
+      file: common-config.yml
+      service: eurekaserver-microservice-config
