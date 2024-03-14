@@ -1,0 +1,67 @@
+
+services:
+
+  cars-container:
+    image: kent0k/my-car-cars:${DOCKER_IMAGE_TAG_VALUE}
+    container_name: cars-container
+    healthcheck:
+      test: "curl --fail --silent localhost:8080/actuator/health/readiness | grep UP || exit 1"
+      interval: 20s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
+    environment:
+      SERVER_PORT: 8080
+      SPRING_DATASOURCE_URL: jdbc:postgresql://cars-db-container:5432/cars
+    depends_on:
+      cars-db-container:
+        condition: service_healthy
+      eurekaserver-container:
+        condition: service_healthy
+    extends:
+      file: common-config.yml
+      service: eurekaserver-microservice-config
+
+  customers-container:
+    image: kent0k/my-car-customers:${DOCKER_IMAGE_TAG_VALUE}
+    container_name: customers-container
+    healthcheck:
+      test: "curl --fail --silent localhost:8080/actuator/health/readiness | grep UP || exit 1"
+      interval: 20s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
+    environment:
+      SERVER_PORT: 8080
+      SPRING_KAFKA_BOOTSTRAP-SERVERS: kafka-container:9092
+      SPRING_DATASOURCE_URL: jdbc:oracle:thin:@customers-db-container:1521:XE
+    depends_on:
+      customers-db-container:
+        condition: service_healthy
+      eurekaserver-container:
+        condition: service_healthy
+    extends:
+      file: common-config.yml
+      service: eurekaserver-microservice-config
+
+  servicepartners-container:
+    image: kent0k/my-car-servicepartners:${DOCKER_IMAGE_TAG_VALUE}
+    container_name: servicepartners-container
+    healthcheck:
+      test: "curl --fail --silent localhost:8080/actuator/health/readiness | grep UP || exit 1"
+      interval: 20s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
+    environment:
+      SERVER_PORT: 8080
+      SPRING_KAFKA_BOOTSTRAP-SERVERS: kafka-container:9092
+      SPRING_DATA_MONGODB_HOST: servicepartners-db-container
+    depends_on:
+      servicepartners-db-container:
+        condition: service_healthy
+      eurekaserver-container:
+        condition: service_healthy
+    extends:
+      file: common-config.yml
+      service: eurekaserver-microservice-config

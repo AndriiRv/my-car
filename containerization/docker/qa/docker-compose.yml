@@ -1,0 +1,38 @@
+
+services:
+
+  redis-container:
+    image: redis
+    container_name: redis-container
+    ports:
+      - 6379:6379
+    healthcheck:
+      test: [ "CMD-SHELL", "redis-cli ping | grep PONG" ]
+      interval: 20s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
+    extends:
+      file: common-config.yml
+      service: base-container-config
+
+  keycloak-container:
+    image: quay.io/keycloak/keycloak:22.0.1
+    container_name: keycloak-container
+    ports:
+      - 7080:8080
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    command: "start-dev"
+    extends:
+      file: common-config.yml
+      service: base-container-config
+
+networks:
+  mycarsharednetwork:
+    driver: bridge
+
+volumes:
+  ssh-volume:
+    external: true
