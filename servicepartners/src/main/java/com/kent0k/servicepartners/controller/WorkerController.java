@@ -25,6 +25,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(path = "/api/workers", produces = {MediaType.APPLICATION_JSON_VALUE})
 @AllArgsConstructor
@@ -82,6 +84,11 @@ public class WorkerController {
         return ResponseEntity.ok(new ResponseDto(workerService.fetch(id), null));
     }
 
+    @GetMapping("/raw")
+    public ResponseEntity<WorkerWithIdDto> fetchRaw(@RequestParam Integer id) {
+        return ResponseEntity.ok(workerService.fetch(id));
+    }
+
     @Operation(
             summary = "Fetch all Worker maintenance entities REST API",
             description = "REST API to fetch all Worker entities"
@@ -102,6 +109,11 @@ public class WorkerController {
     @GetMapping("/all")
     public ResponseEntity<ResponseDto> fetchAll() {
         return ResponseEntity.ok(new ResponseDto(workerService.fetchAll(), null));
+    }
+
+    @GetMapping("/all/raw")
+    public ResponseEntity<List<WorkerWithIdDto>> fetchAllRaw() {
+        return ResponseEntity.ok(workerService.fetchAll());
     }
 
     @Operation(
