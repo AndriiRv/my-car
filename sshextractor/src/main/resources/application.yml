@@ -1,0 +1,8 @@
+
+spring:
+  application:
+    name: 'sshextractor'
+
+ssh-extractor:
+  os-ssh-folder-name: '.ssh'
+  project-ssh-folder-name: 'ssh_keys'
