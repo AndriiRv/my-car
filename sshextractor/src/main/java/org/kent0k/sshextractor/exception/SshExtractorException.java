@@ -1,12 +1,12 @@
 package org.kent0k.sshextractor.exception;
 
-import org.slf4j.Logger;
-
 public class SshExtractorException extends RuntimeException {
 
-    public SshExtractorException(String message, Throwable cause, Logger logger) {
+    public SshExtractorException(String message, Throwable cause) {
         super(message, cause);
+    }
 
-        logger.error(message, this);
+    public SshExtractorException(String message) {
+        super(message);
     }
 }

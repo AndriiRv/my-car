@@ -34,6 +34,11 @@ public class SshExtractorServiceImpl {
         this.configDto = configDto;
     }
 
+    /**
+     * Batch method which intend to add ssh files from host OS to root of 'My-car' projects.
+     *
+     * @return boolean flag which explain whether ssh files added correctly.
+     */
     public boolean addSshFilesToProjectDirectory() {
         Path projectSshDirectoryPath = Paths.get(
                 Paths.get(CURRENT_PROJECT_DIR_NAME).getParent().toAbsolutePath().toString(),
@@ -58,7 +63,7 @@ public class SshExtractorServiceImpl {
      * Check whether directory and at least one file in there also exists.
      *
      * @param path path where need to create directory.
-     * @return boolean flag either directory already exists and filled with at least one file or directory created successfully.
+     * @return boolean flag return true where directory already exists and filled with at least one file.
      */
     boolean isDirectoryExistsAndFilled(Path path) {
         if (Files.exists(path) && !fetchFileNamesBySpecificDirectory(path).isEmpty()) {
@@ -70,7 +75,7 @@ public class SshExtractorServiceImpl {
                 Files.createDirectory(path);
                 return false;
             } catch (IOException e) {
-                throw new SshExtractorException("Exception during create new directory", e.getCause(), LOG);
+                throw new SshExtractorException(String.format("Exception during create new directory by %s", path), e.getCause());
             }
         }
         return false;
@@ -88,6 +93,7 @@ public class SshExtractorServiceImpl {
         Map<String, List<String>> map = new HashMap<>();
         for (String fileName : fileNames) {
             List<String> readLines = new ArrayList<>();
+
             try (BufferedReader reader = Files.newBufferedReader(Paths.get(pathToSshFile.toAbsolutePath().toString(), fileName))) {
                 String currentTextRow;
                 while ((currentTextRow = reader.readLine()) != null) {
@@ -95,7 +101,7 @@ public class SshExtractorServiceImpl {
                 }
                 map.put(fileName, readLines);
             } catch (IOException e) {
-                throw new SshExtractorException(String.format("Exception during read content from %s", fileName), e.getCause(), LOG);
+                throw new SshExtractorException(String.format("Exception during read content from %s", fileName), e.getCause());
             }
         }
         return map;
@@ -109,13 +115,19 @@ public class SshExtractorServiceImpl {
      */
     List<String> fetchFileNamesBySpecificDirectory(Path directoryPath) {
         try (Stream<Path> stream = Files.list(directoryPath)) {
-            return stream
+            List<String> fileNames = stream
                     .filter(file -> !Files.isDirectory(file))
                     .map(Path::getFileName)
                     .map(Path::toString)
                     .collect(Collectors.toList());
+
+            if (fileNames.isEmpty()) {
+                throw new SshExtractorException(String.format("None file names fetched from %s", directoryPath.toAbsolutePath()));
+            }
+
+            return fileNames;
         } catch (IOException e) {
-            throw new SshExtractorException(String.format("Exception during fetch file names from %s", directoryPath.toAbsolutePath()), e.getCause(), LOG);
+            throw new SshExtractorException(String.format("Exception during fetch file names from %s", directoryPath.toAbsolutePath()), e.getCause());
         }
     }
 
@@ -137,7 +149,7 @@ public class SshExtractorServiceImpl {
                 }
             } catch (IOException e) {
                 throw new SshExtractorException(String.format("Exception during write contents to '%s' file by '%s' path", fileName, destination),
-                        e.getCause(), LOG);
+                        e.getCause());
             }
         }
         return true;
