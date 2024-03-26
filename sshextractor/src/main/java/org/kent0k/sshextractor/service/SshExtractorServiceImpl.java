@@ -2,6 +2,8 @@ package org.kent0k.sshextractor.service;
 
 import org.kent0k.sshextractor.dto.MyCarSshExtractorConfigDto;
 import org.kent0k.sshextractor.exception.SshExtractorException;
+import org.kent0k.sshextractor.helper.ApplicationContextHelper;
+import org.kent0k.sshextractor.helper.FileHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -12,12 +14,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 public class SshExtractorServiceImpl {
@@ -29,9 +28,15 @@ public class SshExtractorServiceImpl {
     private static final String CURRENT_PROJECT_DIR_NAME = System.getProperty("user.dir");
 
     private final MyCarSshExtractorConfigDto configDto;
+    private final ApplicationContextHelper applicationContextHelper;
+    private final FileHelper fileHelper;
 
-    public SshExtractorServiceImpl(MyCarSshExtractorConfigDto configDto) {
+    public SshExtractorServiceImpl(MyCarSshExtractorConfigDto configDto,
+                                   ApplicationContextHelper applicationContextHelper,
+                                   FileHelper fileHelper) {
         this.configDto = configDto;
+        this.applicationContextHelper = applicationContextHelper;
+        this.fileHelper = fileHelper;
     }
 
     /**
@@ -42,43 +47,20 @@ public class SshExtractorServiceImpl {
     public boolean addSshFilesToProjectDirectory() {
         Path projectSshDirectoryPath = Paths.get(
                 Paths.get(CURRENT_PROJECT_DIR_NAME).getParent().toAbsolutePath().toString(),
-                configDto.getProjectSshFolderName()
+                configDto.projectSshFolderName()
         ).toAbsolutePath();
 
-        if (isDirectoryExistsAndFilled(projectSshDirectoryPath)) {
+        if (fileHelper.isDirectoryExistsAndFilled(projectSshDirectoryPath)) {
             LOG.info(String.format("Ssh folder files (%s) already exist and filled.", projectSshDirectoryPath));
             return true;
         }
 
-        Map<String, List<String>> readSshDataMap = readSshData();
-        writeSshData(projectSshDirectoryPath.toString(), readSshDataMap);
+        Path systemPathToSsh = Paths.get(OS_USER_HOME, configDto.osSshFolderName());
+        final List<String> fileNames = fileHelper.fetchFileNamesBySpecificDirectory(systemPathToSsh);
 
-        String sshFileNames = String.join(",", readSshDataMap.keySet());
-        LOG.info(String.format("Ssh files (%s) was added to '%s' successfully.", sshFileNames, projectSshDirectoryPath));
+        handleSshData(systemPathToSsh, fileNames, projectSshDirectoryPath);
 
         return true;
-    }
-
-    /**
-     * Check whether directory and at least one file in there also exists.
-     *
-     * @param path path where need to create directory.
-     * @return boolean flag return true where directory already exists and filled with at least one file.
-     */
-    boolean isDirectoryExistsAndFilled(Path path) {
-        if (Files.exists(path) && !fetchFileNamesBySpecificDirectory(path).isEmpty()) {
-            return true;
-        }
-
-        if (!Files.exists(path)) {
-            try {
-                Files.createDirectory(path);
-                return false;
-            } catch (IOException e) {
-                throw new SshExtractorException(String.format("Exception during create new directory by %s", path), e.getCause());
-            }
-        }
-        return false;
     }
 
     /**
@@ -86,71 +68,81 @@ public class SshExtractorServiceImpl {
      *
      * @return map where key is file name and value is a list with text contents row-by-row.
      */
-    Map<String, List<String>> readSshData() {
-        Path pathToSshFile = Paths.get(OS_USER_HOME, configDto.getOsSshFolderName());
-        final List<String> fileNames = fetchFileNamesBySpecificDirectory(pathToSshFile);
+    boolean handleSshData(Path systemPathToSsh, List<String> fileNames, Path projectSshDirectoryPath) {
+        short ranThreads = 0;
+        List<Thread> threads = new ArrayList<>();
 
-        Map<String, List<String>> map = new HashMap<>();
-        for (String fileName : fileNames) {
-            List<String> readLines = new ArrayList<>();
+        for (short currentFileNameIndex = 0; currentFileNameIndex < fileNames.size(); currentFileNameIndex++) {
+            if (ranThreads <= Runtime.getRuntime().availableProcessors()) {
+                SshExtractorMultithreadServiceImpl service = applicationContextHelper.getBean(SshExtractorMultithreadServiceImpl.class);
+                service.setFileName(fileNames.get(currentFileNameIndex));
+                service.setPathToSshFile(systemPathToSsh.toAbsolutePath().toString());
+                service.setProjectSshDirectoryPath(projectSshDirectoryPath.toAbsolutePath().toString());
 
-            try (BufferedReader reader = Files.newBufferedReader(Paths.get(pathToSshFile.toAbsolutePath().toString(), fileName))) {
-                String currentTextRow;
-                while ((currentTextRow = reader.readLine()) != null) {
-                    readLines.add(currentTextRow);
+                Thread thread = new Thread(service);
+                threads.add(thread);
+                thread.start();
+
+                ranThreads++;
+            } else {
+                if (isAnyDeadThreadExists(threads, configDto.threadTimeout())) {
+                    ranThreads = (short) threads.stream().filter(Thread::isAlive).count();
                 }
-                map.put(fileName, readLines);
-            } catch (IOException e) {
-                throw new SshExtractorException(String.format("Exception during read content from %s", fileName), e.getCause());
+                currentFileNameIndex--; // make sure that we come back to the file which should be handled by thread on iteration where all threads were busy.
             }
         }
-        return map;
+        return true;
     }
 
     /**
-     * Build list of file names by specific directory.
+     * This method is need to wait until threads which is currently running died then we can create another threads.
+     * Plan is about contains active threads which equals to OS core count.
+     * <p>
+     * So wait until any of ran threads will die and return true after that.
+     * <p>
+     * If after specific seconds none of threads are dead then throw exception and therefore will exit from the infinite loop.
      *
-     * @param directoryPath directory path using by {@link Path}.
-     * @return list of file names.
+     * @param threads list of active threads.
+     * @param deadlineSeconds time after that we need to break the loop.
+     * @return boolean flag is any of threads are dead.
      */
-    List<String> fetchFileNamesBySpecificDirectory(Path directoryPath) {
-        try (Stream<Path> stream = Files.list(directoryPath)) {
-            List<String> fileNames = stream
-                    .filter(file -> !Files.isDirectory(file))
-                    .map(Path::getFileName)
-                    .map(Path::toString)
-                    .collect(Collectors.toList());
+    boolean isAnyDeadThreadExists(List<Thread> threads, short deadlineSeconds) {
+        LocalDateTime localDateTimePlusSeconds = LocalDateTime.now().plusSeconds(deadlineSeconds);
 
-            if (fileNames.isEmpty()) {
-                throw new SshExtractorException(String.format("None file names fetched from %s", directoryPath.toAbsolutePath()));
+        while (true) {
+            if (localDateTimePlusSeconds.isBefore(LocalDateTime.now())) {
+                throw new SshExtractorException(String.format("None of ran threads was died after %s seconds", deadlineSeconds));
+            }
+            return threads.stream().anyMatch(e -> !e.isAlive());
+        }
+    }
+
+    boolean readAndWriteSshData(String pathToSshFile, String fileName, String projectSshDirectoryPath) {
+        List<String> readLines = new ArrayList<>();
+
+        try (BufferedReader reader = Files.newBufferedReader(Paths.get(pathToSshFile, fileName))) {
+            String currentTextRow;
+            while ((currentTextRow = reader.readLine()) != null) {
+                readLines.add(currentTextRow);
             }
 
-            return fileNames;
+            writeSshData(projectSshDirectoryPath, fileName, readLines);
         } catch (IOException e) {
-            throw new SshExtractorException(String.format("Exception during fetch file names from %s", directoryPath.toAbsolutePath()), e.getCause());
+            throw new SshExtractorException(String.format("Exception during read content from %s", fileName), e.getCause());
         }
+
+        return true;
     }
 
-    /**
-     * Create a files by destination and contents.
-     *
-     * @param destination string based path where is need to save a files.
-     * @param data        based as map where key is file name and value is a list with text contents row-by-row.
-     * @return boolean flag is procedure finished successfully.
-     */
-    boolean writeSshData(String destination, Map<String, List<String>> data) {
-        for (Map.Entry<String, List<String>> entry : data.entrySet()) {
-            final String fileName = entry.getKey();
-
-            try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(destination, entry.getKey()))) {
-                for (String currentTextRow : entry.getValue()) {
-                    writer.write(currentTextRow);
-                    writer.newLine();
-                }
-            } catch (IOException e) {
-                throw new SshExtractorException(String.format("Exception during write contents to '%s' file by '%s' path", fileName, destination),
-                        e.getCause());
+    boolean writeSshData(String destination, String fileName, List<String> fileContent) {
+        try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(destination, fileName))) {
+            for (String currentTextRow : fileContent) {
+                writer.write(currentTextRow);
+                writer.newLine();
             }
+        } catch (IOException e) {
+            throw new SshExtractorException(String.format("Exception during write contents to '%s' file by '%s' path", fileName, destination),
+                    e.getCause());
         }
         return true;
     }
